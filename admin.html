@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="./css/output.css" rel="stylesheet">
+</head>
+
+<body class="bg-admMain-color">
+
+    <div id="popup" class="flex items-center justify-center fixed hidden size-full text-white" style="background-color: rgba(0, 0, 0, .8);z-index: 1;">
+        <div class="p-6 m-12 w-lg bg-admMain-color rounded-3xl">
+            <h2 class="text-2xl font-bold mb-4 text-center">Редагувати піцу</h2>
+            <form class="space-y-4">
+
+                <div class="flex justify-center mb-4">
+                    <input type="file" id="image-input" accept="image/*" class="hidden" onchange="previewImage(event)">
+                    
+                    <!-- Контейнер с фикс. размерами и ограничением -->
+                    <div style="width: 150px; height: 150px; overflow: hidden; border: 2px solid #ccc; border-radius: 8px; position: relative;">
+                        <img id="image-preview"
+                             src="https://via.placeholder.com/150x150?text=Фото"
+                             alt="Завантажити фото"
+                             style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;"
+                             onclick="document.getElementById('image-input').click()">
+                    </div>
+                </div>
+
+                <p class="text-xl font-semibold">Назва</p>
+                <input id="pizza-name" type="text" placeholder="Назва" class="w-full border border-gray-300 rounded p-2" />
+    
+                <p class="text-xl font-semibold">Інгредієнти</p>
+                <div id="ingredients-container" class="space-y-2">
+                    
+                </div>
+
+                <div class="flex space-x-2">
+                    <select id="ingredient-select" class="border bg-admMain-color border-gray-300 rounded p-2 flex-1">
+                        
+                    </select>
+                    <button type="button" onclick="addIngredient()" class="px-4 py-2 bg-green-600 text-white rounded">Додати</button>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xl font-semibold">Ціна</p>
+                        <input id="pizza-price" type="number" placeholder="Ціна" class="w-full border border-gray-300 rounded p-2" />
+                    </div>
+                
+                    <div class="flex flex-col items-end space-y-2 w-full">
+                        <!-- Обёртка для кнопок -->
+                        <div class="flex flex-col items-end w-fit">
+                            <!-- Кнопка "Приховати" занимает ту же ширину -->
+                            <button type="button" class="px-4 py-2 bg-admHover-color text-white rounded w-full">
+                                Приховати
+                            </button>
+                
+                            <!-- Скасувати и Зберегти -->
+                            <div class="flex space-x-2 mt-2">
+                                <button type="button" onclick="closePopup()" class="px-4 py-2 bg-admHover-color rounded">Скасувати</button>
+                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Зберегти</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-60 bg-admMenu-color p-4 space-y-4">
+            <h2 class="font-bold text-white text-2xl">Адміністрування</h2>
+            <nav class="flex flex-col space-y-2 text-2xl">
+                <button onclick="showTab('dashboard')" class="tab-btn bg-blue-600 text-white py-2 px-3 rounded">Головна</button>
+                <button onclick="showTab('menu')" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Меню</button>
+                <button onclick="showTab('orders')" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Замовлення</button>
+                <button onclick="showTab('settings')" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Налаштування</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 overflow-y-auto">
+    
+          <!-- Dashboard Tab -->
+          <div id="dashboard" class="tab text-white">
+            <h1 class="text-2xl font-bold mb-4">Головна</h1>
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="bg-admMenu-color p-4 rounded">
+                        <p class="text-sm">Загальна кількість замовлень</p>
+                        <p class="text-xl font-bold">13,234</p>
+                </div>
+                <div class="bg-admMenu-color p-4 rounded">
+                        <p class="text-sm">Загальний прибуток</p>
+                        <p class="text-xl font-bold">123,456 ₴</p>
+                </div>
+                <div class="bg-admMenu-color p-4 rounded">
+                        <p class="text-sm">Замовлень сьогодні</p>
+                        <p class="text-xl font-bold">56</p>
+                </div>
+            </div>
+
+            <div class="bg-admHover-color p-6 rounded h-60 flex items-center justify-center text-gray-400">
+              (Графік тут умовно, без Chart.js)
+            </div>
+          </div>
+    
+          <!-- Menu Tab -->
+            <div id="menu" class="hidden space-y-4 text-white">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold">Меню</h1>
+                    <button onclick="openPopup()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Додати</button>
+                </div>
+
+                <div class="space-y-4" id="pizza-list">
+                        
+                </div>
+                
+
+            </div>
+    
+          <!-- Orders Tab -->
+          <div id="orders" class="tab hidden text-white">
+            <h1 class="text-2xl font-bold">Замовлення</h1>
+            <p class="text-gray-400">(Тут буде список замовлень)</p>
+          </div>
+    
+          <!-- Settings Tab -->
+          <div id="settings" class="tab hidden text-white">
+            <h1 class="text-2xl font-bold">Налаштування</h1>
+            <p class="text-gray-400">(Тут будуть налаштування)</p>
+          </div>
+        </main>
+        </div>
+    
+        <script>
+            function previewImage(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('image-preview');
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function showTab(id) {
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.add('hidden'));
+                document.getElementById(id).classList.remove('hidden');
+
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('bg-blue-600'));
+                event.target.classList.add('bg-blue-600');
+
+                if (id === 'menu') {
+                    fetch('PHP/get_pizza.php')
+                        .then(response => response.json())
+                        .then(data => {
+                            const menuContainer = document.querySelector('#menu .space-y-4');
+                            // Удалим старый контент (второй div)
+                            const cards = menuContainer.querySelectorAll('.bg-admMenu-color');
+                            cards.forEach(card => card.remove());
+
+                            data.forEach(pizza => {
+                                const hiddenClass = pizza.Activ === '0' ? 'text-red-500' : 'text-white';
+                                const visibilityText = pizza.Activ === '0' ? 'Приховано' : `${pizza.Price} ₴`;
+
+                                const card = document.createElement('div');
+                                card.className = "flex items-center bg-admMenu-color rounded shadow p-4";
+                                card.innerHTML = `
+                                    <img src="${pizza.img || 'https://via.placeholder.com/50'}" alt="Pizza" class="w-16 h-16 rounded mr-4">
+                                    <div class="flex-1">
+                                        <h3 class="text-lg font-bold">${pizza.NamePizza}</h3>
+                                        <p class="text-sm">${pizza.ingredients}</p>
+                                    </div>
+                                    <div class="text-xl font-bold ${hiddenClass}">${visibilityText}</div>
+                                `;
+                                menuContainer.appendChild(card);
+                            });
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                }
+            }
+
+            function addIngredient() {
+                const select = document.getElementById('ingredient-select');
+                const container = document.getElementById('ingredients-container');
+
+                const selectedId = select.value;
+                const selectedName = select.options[select.selectedIndex].text;
+
+                // Проверка: есть ли уже такой ингредиент
+                const existing = container.querySelectorAll('input[name="ingredients[]"]');
+                for (let input of existing) {
+                    if (input.value === selectedName) {
+                        alert(`Інгредієнт "${selectedName}" вже доданий.`);
+                        return; // не добавляем повторно
+                    }
+                }
+
+                // Скрытый input для формы
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'ingredients[]';
+                hiddenInput.value = selectedName;
+
+                // Отображение
+                const item = document.createElement('div');
+                item.className = 'ingredient-item flex items-center justify-between bg-gray-700 p-2 rounded';
+                item.dataset.name = selectedName; // <<< додано
+
+                item.innerHTML = `
+                    <span>${selectedName}</span>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">✕</button>
+                `;
+
+                item.appendChild(hiddenInput);
+                container.appendChild(item);
+            }
+
+            function loadIngredients() {
+                fetch('PHP/get_ingredients.php')
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('ingredient-select');
+                    select.innerHTML = '';
+
+                    data.forEach(ingredient => {
+                        const option = document.createElement('option');
+                        option.value = ingredient.IDIngredient;        
+                        option.textContent = ingredient.NameIngredient; 
+                        select.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Помилка завантаження інгредієнтів:', error);
+                });
+            }
+
+
+            function openPopup() {
+                document.getElementById('popup').classList.remove('hidden');
+                loadIngredients();
+            }
+
+            function closePopup() {
+                document.getElementById('popup').classList.add('hidden');
+            }
+
+            document.querySelector('form').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const name = document.getElementById('pizza-name').value.trim();
+                const price = document.getElementById('pizza-price').value;
+                const ingredients = Array.from(document.querySelectorAll('#ingredients-container .ingredient-item'))
+                    .map(item => item.dataset.name);
+                const imageFile = document.getElementById('image-input').files[0];
+
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('price', price);
+                formData.append('ingredients', JSON.stringify(ingredients));
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+
+                fetch('PHP/save_pizza.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.text())
+                    .then(result => {
+                        console.log('Успішно:', result);
+                        closePopup();
+                    })
+                    .catch(error => {
+                        console.error('Помилка:', error);
+                    });
+            });
+
+            
+        </script>
+    </body>
+</html>

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="./css/output.css" rel="stylesheet">
+    <script src="https://secure.wayforpay.com/server/pay-widget.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+</head>
+<body class="bg-main-color">
+
+    <div id="composition" class="flex items-center justify-center fixed hidden size-full text-black" style="background-color: rgba(0, 0, 0, .8);z-index: 1;">
+        <div class="p-6 m-12 w-auto bg-main-color rounded-3xl">
+            <h2 class="text-2xl font-bold mb-4 text-center">Налаштувати піцу</h2>
+            
+        </div>
+    </div> 
+
+
+    <header id="header" class="bg-header-color text-white flex items-center justify-between px-8 h-24 w-full fixed z-50">
+
+        <div class="text-4xl font-bold font-[Merriweather]">PIZZATIME</div>
+
+        <nav class="flex space-x-8 font-semibold text-2xl">
+          <a href="#" class="px-4">Меню</a>
+          <a href="#" class="px-4">Про нас</a>
+          <a href="#" class="px-4">Акції</a>
+          <a href="#" class="px-4">Контакти</a>
+        </nav>
+        
+        <div class="w-16 h-16  rounded-full flex items-center justify-center">            
+            
+        </div>
+
+    </header>
+    
+    <section class="w-full h-[400px] bg-cover bg-center" style="background-image: url('./css/img/bg.png');">
+
+    </section>
+
+        <main class="mx-auto py-10 bg-main-color size-full flex gap-10 relative">
+    
+            <!-- Логотип -->
+            <div class="w-1/4 flex flex-col items-center">
+            <!-- Лого -->
+            </div>
+        
+            <!-- Сетка пицц -->
+            <div id="pizza-grid" class="grid grid-cols-4 gap-6 flex-1">
+            <!-- Пиццы -->
+            </div>
+        
+            <!-- Обертка корзины с sticky -->
+            <div class="w-64">
+                <div class="sticky top-1/2 -translate-y-1/2 bg-basket-color p-4 mr-8 my-24 rounded shadow-md">
+                    <ul class="mb-2">
+                    <!-- Товары -->
+                    </ul>
+                    <div class="font-semibold mb-2">
+                    <!-- Сумма -->
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="clear-basket" class="bg-[#A4763A] px-3 py-1 rounded">Очистити</button>
+                        <button id="pay-button" class="bg-red-600 text-white px-3 py-1 rounded">Оплата</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="bg-header-color mx-6 mb-6 rounded-3xl p-6 text-main-color relative overflow-hidden" style="font-size: 24px;">
+            <div class="grid grid-cols-4 gap-2  relative">
+
+                <div class="relative ">
+                    <h1 class="font-black text-5xl md:text-6xl mb-6">ПРО НАС</h1>
+                </div>
+                
+                <div class="col-span-3">
+                    <p class="text-base mb-4">
+                        Ласкаво просимо до <strong>PIZZATIME!</strong><br>
+                        Ми — команда справжніх шанувальників італійської кухні. Вже понад 5 років ми готуємо піцу за класичними рецептами, використовуючи тільки найкращі інгредієнти.
+                    </p>
+                </div>
+               
+
+                <div class="col-span-2">
+                    <p class="text-lg mb-4">
+                    Наша місія — дарувати радість та тепло кожному гостю. У нас ви знайдете піцу на будь-який смак: від традиційної «Маргарити» до авторських варіацій від наших шеф-кухарів.
+                    </p>
+            
+                    <p class="text-lg font-semibold mb-2">Чому обирають нас?</p>
+                    
+                    <ul class="list-disc list-inside text-lg mb-4">
+                        <li>Свіжі продукти щодня</li>
+                        <li>Рецепти без консервантів</li>
+                        <li>Швидка доставка</li>
+                        <li>Турбота про кожного клієнта</li>
+                    </ul>
+            
+                    <p class="text-lg">
+                    Приходьте до нас і переконайтеся самі — любов до піци починається з першого шматочка!
+                    </p>
+                </div>
+            
+                <div class="flex justify-center items-center col-span-2 bottom-4 right-4">
+                    <img src="./css/img/worker.png" alt="Наша команда" class="w-[500px] rounded-xl shadow-lg">
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-header-color text-main-color py-6 px-8 text-sm">
+            <div class="flex justify-between ml-26">
+                <div>
+                    <h4 class="font-black text-4xl py-2">Доставка</h4>
+                    <p class="py-1 text-xl"> Контакти </p>
+                    <p class="py-1 text-xl">  Меню </p>
+                    <p class="py-1 text-xl"> Години роботи: <br>08:00 - 23:00 </p>
+                </div>
+                <div>
+                    <h4 class="font-black text-4xl py-2">Контакти</h4>
+                    <p class="py-1 text-xl">м. Дніпро, вул. Шевченка 1</p>
+                    <p class="py-1 text-xl">+38 (067) 123-45-67</p>
+                    <p class="py-3 text-xl">info@pizzatime.ua</p>
+                </div>
+                <div>
+                    <h4 class="font-black text-4xl py-2">Ми в соцмережах</h4>
+                    <div class="flex space-x-2 mt-2">
+                        <img src="./css/img/facebook.png" alt="fb" class="w-18 h-18 mx-3">
+                        <img src="./css/img/instagram.png" alt="inst" class="w-18 h-18 mx-3">
+                        <img src="./css/img/telegram.png" alt="tt" class="w-18 h-18 mx-3">
+                    </div>
+
+                    <p class="py-1 text-xl mt-2">Політика конфіденційності</p>
+                    <p class="py-1 text-xl">Угода користувача</p>
+                </div>
+                <div class="relative w-1/8">
+                    <button class="absolute top-0 right-0 bg-main-color text-header-color px-16 py-4 font-black text-4xl rounded-4xl">Вгору</button>
+                    <p class="absolute bottom-0 right-0 m-2 text-xl">© 2025 PIZZATIME. Всі права захищені</p>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            function loadPizza(pizzaId) {
+                document.getElementById('header').style.position = "static";
+
+                fetch(`PHP/get_pizza_composition.php?id=${pizzaId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const popup = document.getElementById('composition');
+                        const imgSrc = data.pizza.img || './css/img/pizza.png';
+
+                        const selected = data.ingredients.filter(ing => ing.Quantity > 0);
+                        const available = data.ingredients.filter(ing => ing.Quantity === 0);
+
+                        updateFinalPrice.base = parseFloat(data.pizza.Price);
+                        updateFinalPrice.ingredients = selected;
+
+                        popup.innerHTML = `
+                            <div class="p-6 m-12 w-lg bg-main-color rounded-3xl relative">
+                                <button onclick="closePopup()" class="absolute top-4 right-4 text-2xl">&times;</button>
+
+                                <h2 class="text-2xl font-bold mb-4 text-center">Налаштувати піцу: ${data.pizza.NamePizza}</h2>
+
+                                <div class="flex justify-center mb-4">
+                                    <img src="${imgSrc}" alt="${data.pizza.NamePizza}" class="w-60 h-60 object-cover rounded-xl shadow">
+                                </div>
+
+                                <div class="mb-4 text-center text-xl">Базова ціна: <strong>${data.pizza.Price} ₴</strong></div>
+
+                                <div class="mb-4 text-center">
+                                    <label class="mr-4 text-lg">Розмір:</label>
+                                    <select id="pizzaSize" class="px-2 py-1 rounded border">
+                                        <option value="null">Середня</option>
+                                        <option value="0">Мала (-10%)</option>
+                                        <option value="1">Велика (+10%)</option>
+                                    </select>
+                                </div>
+
+                                <h3 class="text-lg font-semibold mb-2">Інгредієнти:</h3>
+                                <div class="grid grid-cols-2 gap-4 mb-4" id="ingredientsList">
+                                    ${selected.map(ing => renderIngredientBlock(ing)).join('')}
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="block text-lg mb-1">Додати інгредієнт:</label>
+                                    <select id="addIngredientSelect" class="px-2 py-1 border rounded w-full mb-2">
+                                        <option value="">-- Виберіть інгредієнт --</option>
+                                        ${available.map(ing => `<option value="${ing.IDIngredient}">${ing.NameIngredient} (${ing.Price} ₴ / ${ing.GramPerUnit} г)</option>`).join('')}
+                                    </select>
+                                    <button onclick="addIngredient()" class="bg-buton-color text-white px-4 py-1 rounded hover:bg-red-700 w-full">Додати</button>
+                                </div>
+
+                                <div class="text-center font-bold text-xl mb-4">Ціна з урахуванням інгредієнтів: <span id="finalPrice">₴</span></div>
+
+                                <div class="flex justify-center gap-4">
+                                    <button onclick="resetPizzaSettings()" class="bg-gray-300 text-black px-6 py-2 rounded hover:bg-gray-400">Скинути налаштування</button>
+                                    <button onclick="addToBasket()" class="bg-buton-color text-white px-6 py-2 rounded hover:bg-red-700">Додати до кошика</button>
+                                </div>
+                            </div>
+                        `;
+
+                        document.getElementById('pizzaSize').addEventListener('change', () => {
+                        updateFinalPrice();
+                    });
+
+                    // Сохраняем доступные ингредиенты глобально
+                    window.lastAvailable = available;
+
+                    updateFinalPrice();
+                });
+            }
+
+            function renderIngredientBlock(ing) {
+                return `
+                    <div class="flex justify-between items-center border p-2 rounded" id="block-${ing.IDIngredient}">
+                        <div>
+                            <div class="font-semibold">${ing.NameIngredient}</div>
+                            <div class="text-sm">${ing.Price} ₴ / ${ing.GramPerUnit} г</div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateQuantity(${ing.IDIngredient}, -1)">−</button>
+                            <span id="qty-${ing.IDIngredient}">${ing.Quantity}</span>
+                            <button onclick="updateQuantity(${ing.IDIngredient}, 1)">+</button>
+                            ${ing.isExtra ? `<button onclick="removeIngredient(${ing.IDIngredient})" class="text-red-500 ml-2">🗑️</button>` : ""}
+                        </div>
+                    </div>
+                `;
+            }
+
+            function addIngredient() {
+                const select = document.getElementById('addIngredientSelect');
+                const id = parseInt(select.value);
+                if (!id || !window.lastAvailable) return;
+
+                const ing = window.lastAvailable.find(i => i.IDIngredient === id);
+                if (!ing) return;
+
+                const addedCount = updateFinalPrice.ingredients.filter(i => i.isExtra).length;
+                if (addedCount >= 5) {
+                    alert("Максимум 5 нових інгредієнтів!");
+                    return;
+                }
+
+                ing.Quantity = 1;
+                ing.isExtra = true; 
+                updateFinalPrice.ingredients.push(ing);
+
+                const container = document.getElementById('ingredientsList');
+                container.insertAdjacentHTML('beforeend', renderIngredientBlock(ing));
+                updateFinalPrice();
+
+                select.querySelector(`option[value="${id}"]`).remove();
+                select.value = "";
+            }
+
+            function updateQuantity(id, delta) {
+                const qtySpan = document.getElementById(`qty-${id}`);
+                let qty = parseInt(qtySpan.innerText);
+                qty = Math.max(0, Math.min(5, qty + delta));
+                qtySpan.innerText = qty;
+                updateFinalPrice();
+            }
+
+            function updateFinalPrice(base = null, ingredients = null) {
+                if (base) updateFinalPrice.base = parseFloat(base);
+                if (ingredients) updateFinalPrice.ingredients = ingredients;
+
+                const size = document.getElementById('pizzaSize').value;
+                let total = updateFinalPrice.base;
+
+                updateFinalPrice.ingredients.forEach(ing => {
+                    const currentQty = parseInt(document.getElementById(`qty-${ing.IDIngredient}`).innerText);
+                    const defaultQty = parseInt(ing.Quantity); // базовое количество из composition
+
+                    if (currentQty > defaultQty) {
+                        const extra = currentQty - defaultQty;
+                        total += extra * parseFloat(ing.Price);
+                    }
+                });
+
+                if (size === "0") total *= 0.9;
+                else if (size === "1") total *= 1.1;
+
+                document.getElementById('finalPrice').innerText = total.toFixed(2) + ' ₴';
+            }
+
+            function resetPizzaSettings() {
+                const pizzaId = new URLSearchParams(window.location.search).get("id");
+                const popup = document.getElementById("composition");
+
+                if (!pizzaId && window.lastPizzaId) {
+                    loadPizza(window.lastPizzaId);
+                } else {
+                    loadPizza(pizzaId);
+                }
+            }
+
+            function removeIngredient(id) {
+                const container = document.getElementById(`block-${id}`);
+                if (container) container.remove();
+
+                // Удалить из массива ингредиентов
+                updateFinalPrice.ingredients = updateFinalPrice.ingredients.filter(ing => ing.IDIngredient !== id);
+
+                // Вернуть обратно в селект
+                const ing = window.lastAvailable.find(i => i.IDIngredient === id);
+                if (ing) {
+                    const select = document.getElementById("addIngredientSelect");
+                    const option = document.createElement("option");
+                    option.value = ing.IDIngredient;
+                    option.textContent = `${ing.NameIngredient} (${ing.Price} ₴ / ${ing.GramPerUnit} г)`;
+                    select.appendChild(option);
+                }
+
+                updateFinalPrice();
+            }
+
+            function addToBasket() {
+                const pizzaId = new URLSearchParams(window.location.search).get("id") || window.lastPizzaId;
+                const size = document.getElementById('pizzaSize').value;
+                const name = document.querySelector('#composition h2').innerText.replace('Налаштувати піцу: ', '');
+                const price = parseFloat(document.getElementById('finalPrice').innerText);
+                
+                const ingredients = updateFinalPrice.ingredients.map(ing => {
+                    const qty = parseInt(document.getElementById(`qty-${ing.IDIngredient}`).innerText);
+                    return {
+                        IDIngredient: ing.IDIngredient,
+                        NameIngredient: ing.NameIngredient,
+                        Quantity: qty,
+                        Price: ing.Price
+                    };
+                });
+
+                const pizza = {
+                    id: Date.now(),
+                    name: name,
+                    size: size,
+                    price: price,
+                    ingredients: ingredients
+                };
+            
+                const basket = JSON.parse(localStorage.getItem('basket')) || [];
+                basket.push(pizza);
+                localStorage.setItem('basket', JSON.stringify(basket));
+
+                renderBasket();
+                closePopup();
+            }
+
+            function renderBasket() {
+                const basket = JSON.parse(localStorage.getItem('basket')) || [];
+                const list = document.querySelector('.sticky ul');
+                const sumBlock = document.querySelector('.sticky .font-semibold');
+                list.innerHTML = ''; // Очистим перед повторным рендером
+                let total = 0;
+
+                basket.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-2 text-sm';
+                    li.innerHTML = `
+                        <div class="font-bold">${item.name} ${renderSizeLabel(item.size)}</div>
+                        <div class="text-gray-700">Ціна: ${item.price.toFixed(2)} ₴</div>
+                    `;
+                    list.appendChild(li);
+                    total += item.price;
+                });
+
+                sumBlock.innerText = `Сума: ${total.toFixed(2)} ₴`;
+            }
+
+            function renderSizeLabel(size) {
+                if (size === "0") return "(Мала)";
+                if (size === "1") return "(Велика)";
+                return "(Середня)";
+            }
+
+            window.addEventListener('DOMContentLoaded', () => {
+                renderBasket();
+            });
+
+            document.querySelector('#clear-basket').addEventListener('click', () => {
+                localStorage.removeItem('basket');
+                renderBasket();
+            });
+
+            window.addEventListener('DOMContentLoaded', () => {
+                const basket = JSON.parse(localStorage.getItem('basket')) || [];
+                const list = document.querySelector('.sticky ul');
+                const sumBlock = document.querySelector('.sticky .font-semibold');
+                let total = 0;
+
+                basket.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-2';
+                    li.innerHTML = `
+                        <div class="font-bold">${item.name}</div>
+                        <div class="text-sm">Ціна: ${item.price}</div>
+                    `;
+                    list.appendChild(li);
+
+                    total += parseFloat(item.price);
+                });
+
+                sumBlock.innerText = `Сума: ${total.toFixed(2)} ₴`;
+            });
+
+
+
+
+            function showMenu(){
+                fetch('PHP/get_pizza.php')
+                .then(response => response.json())
+                .then(data => {
+                    const pizzaGrid = document.getElementById('pizza-grid');
+                    pizzaGrid.innerHTML = ''; // Очистка
+
+                    data.forEach(pizza => {
+                        const pizzaCard = document.createElement('div');
+                        pizzaCard.className = 'bg-main-color rounded-xl p-4 w-[220px] h-auto flex flex-col items-center text-center hover:shadow-lg hover:bg-main2-color';
+                        // Заглушка
+                        const placeholder = './css/img/pizza.png';
+
+                        pizzaCard.innerHTML = `
+                            <h3 class="text-xl font-bold mb-2 font-[Merriweather]">${pizza.NamePizza}</h3>
+                            <img src="${pizza.image || placeholder}" alt="${pizza.NamePizza}" class="w-38 h-38 object-cover mb-4">
+                            <p class="text-lg font-semibold mb-4 font-[Merriweather]">${pizza.Price} ₴</p>
+                            <button class="bg-buton-color text-white px-4 py-2 rounded hover:bg-red-700">Додати до кошику</button>
+                        `;
+
+                        pizzaCard.onclick = () => {
+                            document.getElementById('composition').classList.remove('hidden');
+                            loadPizza(pizza.IDPizza); 
+                        }
+
+                        pizzaGrid.appendChild(pizzaCard);
+                    });
+                })
+                .catch(error => console.error('Помилка завантаження меню:', error));
+            }
+
+            document.addEventListener('DOMContentLoaded', showMenu);
+
+            function closePopup() {
+                document.getElementById('header').style = "position: fixed;";
+                document.getElementById('composition').classList.add('hidden');
+            }
+
+            function openPay() {
+                document.getElementById('pay').classList.remove('hidden');
+                loadIngredients();
+            }
+
+            function closePay() {
+                document.getElementById('pay').classList.add('hidden');
+            }
+
+            document.getElementById('pay-button').addEventListener('click', function () {
+                const wayforpay = new Wayforpay();
+
+                const paymentData = {
+                    merchantAccount: "test_merch_n1",
+                    merchantDomainName: "test.wayforpay.com",
+                    authorizationType: "SimpleSignature",
+                    orderReference: "test_order_" + Date.now(),
+                    orderDate: Math.floor(Date.now() / 1000),
+                    amount: 1,
+                    currency: "UAH",
+                    productName: ["Тестовий товар"],
+                    productCount: [1],
+                    productPrice: [1],
+                    clientEmail: "test@test.com",
+                    clientPhone: "380631112233",
+                    language: "UA"
+                };
+
+                const secretKey = "test";
+
+                const generateSignature = (data) => {
+                    const signatureString = [
+                        data.merchantAccount,
+                        data.merchantDomainName,
+                        data.orderReference,
+                        data.orderDate,
+                        data.amount,
+                        data.currency,
+                        ...data.productName,
+                        ...data.productCount,
+                        ...data.productPrice,
+                        secretKey
+                    ].join(';');
+
+                    return CryptoJS.SHA1(signatureString).toString();
+                };
+
+                paymentData.merchantSignature = generateSignature(paymentData);
+
+                wayforpay.run(
+                    paymentData,
+                    function (response) {
+                        console.log("✅ Успішна оплата", response);
+                        alert("Оплата успішна!");
+                    },
+                    function (response) {
+                        console.log("❌ Помилка оплати", response);
+                        alert("Помилка оплати!");
+                    },
+                    function (response) {
+                        console.log("↩️ Користувач скасував оплату", response);
+                        alert("Оплата скасована!");
+                    }
+                );
+            });
+        </script>
+
+    </body>
+</html>
