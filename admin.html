@@ -11,13 +11,28 @@
 
     <div id="popup" class="flex items-center justify-center fixed hidden size-full text-white" style="background-color: rgba(0, 0, 0, .8);z-index: 1;">
         <div class="p-6 m-12 w-lg bg-admMain-color rounded-3xl">
-            <h2 class="text-2xl font-bold mb-4 text-center">Редагувати піцу</h2>
+            <h2 class="text-2xl font-bold mb-4 text-center">Редагувати товар</h2>
             <form class="space-y-4">
-
-                <div class="flex justify-center mb-4">
+    
+                <!-- Тип товару -->
+                <div>
+                    <p class="text-xl font-semibold mb-2">Тип товару</p>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="item-type" value="pizza" checked onchange="handleTypeChange()"> <span>Піца</span>
+                        </label>
+                        <label class="flex items-center space-x-2 pl-6">
+                            <input type="radio" name="item-type" value="ingredient" onchange="handleTypeChange()"> <span>Інгредієнти</span>
+                        </label>
+                        <label class="flex items-center space-x-2 pl-6">
+                            <input type="radio" name="item-type" value="drink" onchange="handleTypeChange()"> <span>Напої</span>
+                        </label>
+                    </div>
+                </div>
+    
+                <!-- Фото -->
+                <div id="image-section" class="flex justify-center mb-4">
                     <input type="file" id="image-input" accept="image/*" class="hidden" onchange="previewImage(event)">
-                    
-                    <!-- Контейнер с фикс. размерами и ограничением -->
                     <div style="width: 150px; height: 150px; overflow: hidden; border: 2px solid #ccc; border-radius: 8px; position: relative;">
                         <img id="image-preview"
                              src="https://via.placeholder.com/150x150?text=Фото"
@@ -26,37 +41,41 @@
                              onclick="document.getElementById('image-input').click()">
                     </div>
                 </div>
-
+    
+                <!-- Назва -->
                 <p class="text-xl font-semibold">Назва</p>
                 <input id="pizza-name" type="text" placeholder="Назва" class="w-full border border-gray-300 rounded p-2" />
     
-                <p class="text-xl font-semibold">Інгредієнти</p>
-                <div id="ingredients-container" class="space-y-2">
-                    
+                <!-- Інгредієнти секція -->
+                <div id="ingredients-section">
+                    <p class="text-xl font-semibold">Інгредієнти</p>
+                    <div id="ingredients-container" class="space-y-2"></div>
+    
+                    <div class="flex space-x-2 mt-2">
+                        <select id="ingredient-select" class="border bg-admMain-color border-gray-300 rounded p-2 flex-1">
+                            <!-- PHP: тут опції інгредієнтів -->
+                        </select>
+                        <button type="button" onclick="addIngredient()" class="px-4 py-2 bg-green-600 text-white rounded">Додати</button>
+                    </div>
                 </div>
-
-                <div class="flex space-x-2">
-                    <select id="ingredient-select" class="border bg-admMain-color border-gray-300 rounded p-2 flex-1">
-                        
-                    </select>
-                    <button type="button" onclick="addIngredient()" class="px-4 py-2 bg-green-600 text-white rounded">Додати</button>
+    
+                <!-- Грам на одиницю (для інгредієнтів) -->
+                <div id="weight-section" class="hidden">
+                    <p class="text-xl font-semibold">Грам на одиницю</p>
+                    <input id="ingredient-weight" type="number" placeholder="Грами" class="w-full border border-gray-300 rounded p-2" />
                 </div>
-                
+    
+                <!-- Ціна -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <p class="text-xl font-semibold">Ціна</p>
                         <input id="pizza-price" type="number" placeholder="Ціна" class="w-full border border-gray-300 rounded p-2" />
                     </div>
-                
+    
+                    <!-- Кнопки -->
                     <div class="flex flex-col items-end space-y-2 w-full">
-                        <!-- Обёртка для кнопок -->
                         <div class="flex flex-col items-end w-fit">
-                            <!-- Кнопка "Приховати" занимает ту же ширину -->
-                            <button type="button" class="px-4 py-2 bg-admHover-color text-white rounded w-full">
-                                Приховати
-                            </button>
-                
-                            <!-- Скасувати и Зберегти -->
+                            <button type="button" class="px-4 py-2 bg-admHover-color text-white rounded w-full">Приховати</button>
                             <div class="flex space-x-2 mt-2">
                                 <button type="button" onclick="closePopup()" class="px-4 py-2 bg-admHover-color rounded">Скасувати</button>
                                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Зберегти</button>
@@ -170,7 +189,7 @@
                                 const card = document.createElement('div');
                                 card.className = "flex items-center bg-admMenu-color rounded shadow p-4";
                                 card.innerHTML = `
-                                    <img src="${pizza.img || 'https://via.placeholder.com/50'}" alt="Pizza" class="w-16 h-16 rounded mr-4">
+                                    <img src="${pizza.img}" alt="Pizza" class="w-16 h-16 rounded mr-4">
                                     <div class="flex-1">
                                         <h3 class="text-lg font-bold">${pizza.NamePizza}</h3>
                                         <p class="text-sm">${pizza.ingredients}</p>
@@ -211,7 +230,7 @@
                 // Отображение
                 const item = document.createElement('div');
                 item.className = 'ingredient-item flex items-center justify-between bg-gray-700 p-2 rounded';
-                item.dataset.name = selectedName; // <<< додано
+                item.dataset.name = selectedName; 
 
                 item.innerHTML = `
                     <span>${selectedName}</span>
@@ -253,25 +272,51 @@
 
             document.querySelector('form').addEventListener('submit', function (e) {
                 e.preventDefault();
+                const type = document.querySelector('input[name="item-type"]:checked').value;
 
-                const name = document.getElementById('pizza-name').value.trim();
-                const price = document.getElementById('pizza-price').value;
-                const ingredients = Array.from(document.querySelectorAll('#ingredients-container .ingredient-item'))
-                    .map(item => item.dataset.name);
-                const imageFile = document.getElementById('image-input').files[0];
+                if(type === 'pizza'){ //пицца
 
-                const formData = new FormData();
-                formData.append('name', name);
-                formData.append('price', price);
-                formData.append('ingredients', JSON.stringify(ingredients));
-                if (imageFile) {
-                    formData.append('image', imageFile);
-                }
+                    const name = document.getElementById('pizza-name').value.trim();
+                    const price = document.getElementById('pizza-price').value;
+                    const ingredients = Array.from(document.querySelectorAll('#ingredients-container .ingredient-item'))
+                        .map(item => item.dataset.name);
+                    const imageFile = document.getElementById('image-input').files[0];
 
-                fetch('PHP/save_pizza.php', {
-                    method: 'POST',
-                    body: formData
-                })
+                    const formData = new FormData();
+                    formData.append('name', name);
+                    formData.append('price', price);
+                    formData.append('ingredients', JSON.stringify(ingredients));
+                    if (imageFile) {
+                        formData.append('image', imageFile);
+                    }
+
+                    fetch('PHP/save_pizza.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.text())
+                        .then(result => {
+                            console.log('Успішно:', result);
+                            closePopup();
+                        })
+                        .catch(error => {
+                            console.error('Помилка:', error);
+                        });
+
+                }else if(type === 'ingredient'){ //ингредиенты
+                    const name = document.getElementById('pizza-name').value.trim();
+                    const price = document.getElementById('pizza-price').value;
+                    const weight = document.getElementById('ingredient-weight').value;
+
+                    const formData = new FormData();
+                    formData.append('name', name);
+                    formData.append('price', price);
+                    formData.append('weight', weight);
+
+                    fetch('PHP/setIngredient.php', {
+                        method: 'POST',
+                        body: formData
+                    })
                     .then(response => response.text())
                     .then(result => {
                         console.log('Успішно:', result);
@@ -280,9 +325,55 @@
                     .catch(error => {
                         console.error('Помилка:', error);
                     });
+
+                }else if(type === 'drink'){ //напої
+                    const name = document.getElementById('pizza-name').value.trim();
+                    const price = document.getElementById('pizza-price').value;
+                    const imageFile = document.getElementById('image-input').files[0];
+
+                    const formData = new FormData();
+                    formData.append('name', name);
+                    formData.append('price', price);
+                    if (imageFile) {
+                        formData.append('image', imageFile);
+                    }
+
+                    fetch('PHP/set_drink.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        console.log('Успішно:', result);
+                        closePopup();
+                    })
+                    .catch(error => {
+                        console.error('Помилка:', error);
+                    });
+                }
             });
 
-            
+            function handleTypeChange() {
+                const type = document.querySelector('input[name="item-type"]:checked').value;
+                const ingredientsSection = document.getElementById('ingredients-section');
+                const weightSection = document.getElementById('weight-section');
+                const imageSection = document.getElementById('image-section');
+
+                if (type === 'pizza') {
+                    ingredientsSection.style.display = 'block';
+                    weightSection.style.display = 'none';
+                    imageSection.style.display = 'flex';
+                } else if (type === 'ingredient') {
+                    ingredientsSection.style.display = 'none';
+                    weightSection.style.display = 'block';
+                    imageSection.style.display = 'none';
+                } else if (type === 'drink') {
+                    ingredientsSection.style.display = 'none';
+                    weightSection.style.display = 'none';
+                    imageSection.style.display = 'flex';
+                }
+            }
+
         </script>
     </body>
 </html>

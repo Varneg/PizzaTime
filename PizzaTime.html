@@ -48,8 +48,14 @@
             </div>
         
             <!-- Сетка пицц -->
-            <div id="pizza-grid" class="grid grid-cols-4 gap-6 flex-1">
-            <!-- Пиццы -->
+            <div id="meny-grid">
+                <div id="pizza-grid" class="grid grid-cols-4 gap-6 flex-1 mb-6">
+
+                </div>
+                <h2 class="text-dark text-4xl font-bold text-center font-[Merriweather]"> Напої </h2>
+                <div id="drink-grid" class="grid grid-cols-4 gap-6 flex-1">
+
+                </div>
             </div>
         
             <!-- Обертка корзины с sticky -->
@@ -63,7 +69,7 @@
                     </div>
                     <div class="flex gap-2">
                         <button id="clear-basket" class="bg-[#A4763A] px-3 py-1 rounded">Очистити</button>
-                        <button id="pay-button" class="bg-red-600 text-white px-3 py-1 rounded">Оплата</button>
+                        <button id="pay-button" onclick="pay()" class="bg-red-600 text-white px-3 py-1 rounded">Оплата</button>
                     </div>
                 </div>
             </div>
@@ -142,6 +148,62 @@
         </footer>
 
         <script>
+                        function showMenu(){
+                fetch('PHP/get_pizza.php')
+                .then(response => response.json())
+                .then(data => {
+                    const pizzaGrid = document.getElementById('pizza-grid');
+                    pizzaGrid.innerHTML = ''; // Очистка
+
+                    data.forEach(pizza => {
+                        const pizzaCard = document.createElement('div');
+                        pizzaCard.className = 'bg-main-color rounded-xl p-4 w-[220px] h-auto flex flex-col items-center text-center hover:shadow-lg hover:bg-main2-color';
+                        // Заглушка
+                        const placeholder = './css/img/pizza.png';
+
+                        pizzaCard.innerHTML = `
+                            <h3 class="text-xl font-bold mb-2 font-[Merriweather]">${pizza.NamePizza}</h3>
+                            <img src="${pizza.image || placeholder}" alt="${pizza.NamePizza}" class="w-38 h-38 object-cover mb-4">
+                            <p class="text-lg font-semibold mb-4 font-[Merriweather]">${pizza.Price} ₴</p>
+                            <button class="bg-buton-color text-white px-4 py-2 rounded hover:bg-red-700">Додати до кошику</button>
+                        `;
+
+                        pizzaCard.onclick = () => {
+                            document.getElementById('composition').classList.remove('hidden');
+                            loadPizza(pizza.IDPizza); 
+                        }
+
+                        pizzaGrid.appendChild(pizzaCard);
+                    });
+                })
+                .catch(error => console.error('Помилка завантаження меню:', error));
+
+                fetch('PHP/get_drink.php')
+                .then(response => response.json())
+                .then(data => {
+                    const pizzaGrid = document.getElementById('drink-grid');
+
+                    data.forEach(drink => {
+                        const pizzaCard = document.createElement('div');
+                        pizzaCard.className = 'bg-main-color rounded-xl p-4 w-[220px] h-auto flex flex-col items-center text-center hover:shadow-lg hover:bg-main2-color';
+                        // Заглушка
+                        const placeholder = './css/img/pizza.png';
+
+                        pizzaCard.innerHTML = `
+                            <h3 class="text-xl font-bold mb-2 font-[Merriweather]">${drink.NameDish}</h3>
+                            <img src="${drink.image || placeholder}" alt="${drink.NameDish}" class="w-38 h-38 object-cover mb-4">
+                            <p class="text-lg font-semibold mb-4 font-[Merriweather]">${drink.Price} ₴</p>
+                            <button class="bg-buton-color text-white px-4 py-2 rounded hover:bg-red-700">Додати до кошику</button>
+                        `;
+
+                        pizzaGrid.appendChild(pizzaCard);
+                    });
+                })
+            }
+
+            document.addEventListener('DOMContentLoaded', showMenu);
+
+
             function loadPizza(pizzaId) {
                 document.getElementById('header').style.position = "static";
 
@@ -407,42 +469,6 @@
                 sumBlock.innerText = `Сума: ${total.toFixed(2)} ₴`;
             });
 
-
-
-
-            function showMenu(){
-                fetch('PHP/get_pizza.php')
-                .then(response => response.json())
-                .then(data => {
-                    const pizzaGrid = document.getElementById('pizza-grid');
-                    pizzaGrid.innerHTML = ''; // Очистка
-
-                    data.forEach(pizza => {
-                        const pizzaCard = document.createElement('div');
-                        pizzaCard.className = 'bg-main-color rounded-xl p-4 w-[220px] h-auto flex flex-col items-center text-center hover:shadow-lg hover:bg-main2-color';
-                        // Заглушка
-                        const placeholder = './css/img/pizza.png';
-
-                        pizzaCard.innerHTML = `
-                            <h3 class="text-xl font-bold mb-2 font-[Merriweather]">${pizza.NamePizza}</h3>
-                            <img src="${pizza.image || placeholder}" alt="${pizza.NamePizza}" class="w-38 h-38 object-cover mb-4">
-                            <p class="text-lg font-semibold mb-4 font-[Merriweather]">${pizza.Price} ₴</p>
-                            <button class="bg-buton-color text-white px-4 py-2 rounded hover:bg-red-700">Додати до кошику</button>
-                        `;
-
-                        pizzaCard.onclick = () => {
-                            document.getElementById('composition').classList.remove('hidden');
-                            loadPizza(pizza.IDPizza); 
-                        }
-
-                        pizzaGrid.appendChild(pizzaCard);
-                    });
-                })
-                .catch(error => console.error('Помилка завантаження меню:', error));
-            }
-
-            document.addEventListener('DOMContentLoaded', showMenu);
-
             function closePopup() {
                 document.getElementById('header').style = "position: fixed;";
                 document.getElementById('composition').classList.add('hidden');
@@ -458,61 +484,44 @@
             }
 
             document.getElementById('pay-button').addEventListener('click', function () {
-                const wayforpay = new Wayforpay();
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = 'https://secure.wayforpay.com/pay';
+                form.acceptCharset = 'utf-8';
 
-                const paymentData = {
-                    merchantAccount: "test_merch_n1",
-                    merchantDomainName: "test.wayforpay.com",
-                    authorizationType: "SimpleSignature",
-                    orderReference: "test_order_" + Date.now(),
-                    orderDate: Math.floor(Date.now() / 1000),
-                    amount: 1,
-                    currency: "UAH",
-                    productName: ["Тестовий товар"],
-                    productCount: [1],
-                    productPrice: [1],
-                    clientEmail: "test@test.com",
-                    clientPhone: "380631112233",
-                    language: "UA"
-                };
-
-                const secretKey = "test";
-
-                const generateSignature = (data) => {
-                    const signatureString = [
-                        data.merchantAccount,
-                        data.merchantDomainName,
-                        data.orderReference,
-                        data.orderDate,
-                        data.amount,
-                        data.currency,
-                        ...data.productName,
-                        ...data.productCount,
-                        ...data.productPrice,
-                        secretKey
-                    ].join(';');
-
-                    return CryptoJS.SHA1(signatureString).toString();
-                };
-
-                paymentData.merchantSignature = generateSignature(paymentData);
-
-                wayforpay.run(
-                    paymentData,
-                    function (response) {
-                        console.log("✅ Успішна оплата", response);
-                        alert("Оплата успішна!");
-                    },
-                    function (response) {
-                        console.log("❌ Помилка оплати", response);
-                        alert("Помилка оплати!");
-                    },
-                    function (response) {
-                        console.log("↩️ Користувач скасував оплату", response);
-                        alert("Оплата скасована!");
-                    }
-                );
+                // Вставленные данные формы
+                form.innerHTML = `
+                    <input name="merchantAccount" value="test_merch_n1">
+                    <input name="merchantAuthType" value="SimpleSignature">
+                    <input name="merchantDomainName" value="www.market.ua">
+                    <input name="orderReference" value="DH1745217726">
+                    <input name="orderDate" value="1415379863">
+                    <input name="amount" value="1547.36">
+                    <input name="currency" value="UAH">
+                    <input name="orderTimeout" value="49000">
+                    <input name="productName[]" value="Процесор Intel Core i5-4670 3.4GHz">
+                    <input name="productName[]" value="Kingston DDR3-1600 4096MB PC3-12800">
+                    <input name="productPrice[]" value="1000">
+                    <input name="productPrice[]" value="547.36">
+                    <input name="productCount[]" value="1">
+                    <input name="productCount[]" value="1">
+                    <input name="clientFirstName" value="Василь">
+                    <input name="clientLastName" value="Пібаренко">
+                    <input name="clientAddress" value="пр. Науки, 12">
+                    <input name="clientCity" value="Дніпро">
+                    <input name="clientEmail" value="some@mail.com">
+                    <input name="defaultPaymentSystem" value="card">
+                    <input name="merchantSignature" value="2d1c0fb24db14751dafff980c9c5258f">
+                    <input type="submit" value="Test">
+                `;
+                
+                document.body.appendChild(form);
+                form.submit();
             });
+
+            function pay(){
+
+            }
         </script>
 
     </body>
