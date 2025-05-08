@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme{
+    --color-main-color: #EBC18A ;
+    --color-header-color: #4B2F23 ;
+    --color-admMain-color: #2A2828 ;
+    --color-admMenu-color: #424242 ;
+    --color-admHover-color: #1B1B1B ;
+    --color-buton-color: #B83232 ;
+    --color-main2-color: #EBC171 ;
+    --color-basket-color: #D5C3AC ;
+}
