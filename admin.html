@@ -5,12 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="./css/output.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="bg-admMain-color">
 
-    <div id="popup" class="flex items-center justify-center fixed hidden size-full text-white" style="background-color: rgba(0, 0, 0, .8);z-index: 1;">
-        <div class="p-6 m-12 w-lg bg-admMain-color rounded-3xl">
+    <div id="order-popup" class="flex items-center justify-center fixed hidden size-full text-white" style="background-color: rgba(0, 0, 0, .8);z-index: 1;">
+        <div class="relative p-6 m-12 w-lg bg-admMain-color rounded-3xl">
+            <button id="close-order-popup" class="absolute top-2 right-2 text-gray-400 hover:text-white text-3xl leading-none font-bold">&times;</button>
+            <h2 class="text-2xl font-bold mb-4">Деталі замовлення</h2>
+            <div id="popup-content" class="space-y-2 max-h-[70vh] overflow-y-auto">
+                <!-- Здесь будут детали заказа -->
+            </div>
+            <button onclick="updateOrderStatus()" id="update-status-btn" class="ml-2 px-2 py-1 bg-blue-600 text-white rounded">
+                Оновити
+            </button>
+        </div>
+    </div>
+
+    <div id="popup" class="flex items-center justify-center fixed hidden size-full text-white" style="background-color: rgba(0, 0, 0, .8);z-index: 2;">
+        <div class="relative p-6 m-12 w-lg bg-admMain-color rounded-3xl">
+            <button id="close-popup" onclick="closePopup()" class="absolute top-2 right-2 text-gray-400 hover:text-white text-3xl font-bold leading-none">&times;</button>
             <h2 class="text-2xl font-bold mb-4 text-center">Редагувати товар</h2>
             <form class="space-y-4">
     
@@ -71,17 +86,13 @@
                         <p class="text-xl font-semibold">Ціна</p>
                         <input id="pizza-price" type="number" placeholder="Ціна" class="w-full border border-gray-300 rounded p-2" />
                     </div>
-    
-                    <!-- Кнопки -->
-                    <div class="flex flex-col items-end space-y-2 w-full">
-                        <div class="flex flex-col items-end w-fit">
-                            <button type="button" class="px-4 py-2 bg-admHover-color text-white rounded w-full">Приховати</button>
-                            <div class="flex space-x-2 mt-2">
-                                <button type="button" onclick="closePopup()" class="px-4 py-2 bg-admHover-color rounded">Скасувати</button>
-                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Зберегти</button>
-                            </div>
-                        </div>
+                    <div>
+                        <p class="text-xl font-semibold">Акційна ціна</p>
+                        <input id="promo-price" type="number" placeholder="Акційна ціна (необов’язково)" class="w-full border border-gray-300 rounded p-2" />
                     </div>
+                
+                    <button id="toggle-visibility" type="button" data-hidden="false" class="px-4 py-2 bg-admHover-color text-white rounded">Приховати</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Зберегти</button>
                 </div>
             </form>
         </div>
@@ -92,10 +103,10 @@
         <aside class="w-60 bg-admMenu-color p-4 space-y-4">
             <h2 class="font-bold text-white text-2xl">Адміністрування</h2>
             <nav class="flex flex-col space-y-2 text-2xl">
-                <button onclick="showTab('dashboard')" class="tab-btn bg-blue-600 text-white py-2 px-3 rounded">Головна</button>
-                <button onclick="showTab('menu')" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Меню</button>
-                <button onclick="showTab('orders')" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Замовлення</button>
-                <button onclick="showTab('settings')" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Налаштування</button>
+                <button onclick="showMenu('dashboard', event)" class="tab-btn bg-blue-600 text-white py-2 px-3 rounded">Головна</button>
+                <button onclick="showMenu('menu', event)" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Меню</button>
+                <button onclick="showMenu('orders', event)" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Замовлення</button>
+                <button onclick="showMenu('settings', event)" class="tab-btn text-white hover:bg-blue-600 py-2 px-3 rounded">Налаштування</button>
             </nav>
         </aside>
 
@@ -103,31 +114,32 @@
         <main class="flex-1 p-6 overflow-y-auto">
     
           <!-- Dashboard Tab -->
-          <div id="dashboard" class="tab text-white">
-            <h1 class="text-2xl font-bold mb-4">Головна</h1>
-            <div class="grid grid-cols-3 gap-4 mb-6">
-                <div class="bg-admMenu-color p-4 rounded">
+            <div id="dashboard" class="tab text-white">
+                <h1 class="text-2xl font-bold mb-4">Головна</h1>
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="bg-admMenu-color p-4 rounded">
                         <p class="text-sm">Загальна кількість замовлень</p>
-                        <p class="text-xl font-bold">13,234</p>
-                </div>
-                <div class="bg-admMenu-color p-4 rounded">
+                        <p id="total-orders" class="text-xl font-bold">-</p>
+                    </div>
+                    <div class="bg-admMenu-color p-4 rounded">
                         <p class="text-sm">Загальний прибуток</p>
-                        <p class="text-xl font-bold">123,456 ₴</p>
-                </div>
-                <div class="bg-admMenu-color p-4 rounded">
+                        <p id="total-profit" class="text-xl font-bold">-</p>
+                    </div>
+                    <div class="bg-admMenu-color p-4 rounded">
                         <p class="text-sm">Замовлень сьогодні</p>
-                        <p class="text-xl font-bold">56</p>
+                        <p id="orders-today" class="text-xl font-bold">-</p>
+                    </div>
+                </div>
+                
+
+                <div class="bg-admHover-color p-6 rounded" style="height: 400px;">
+                    <canvas id="orders-chart" style="width: 100%; height: 100%;"></canvas>
                 </div>
             </div>
-
-            <div class="bg-admHover-color p-6 rounded h-60 flex items-center justify-center text-gray-400">
-              (Графік тут умовно, без Chart.js)
-            </div>
-          </div>
     
           <!-- Menu Tab -->
             <div id="menu" class="hidden space-y-4 text-white">
-                <div class="flex items-center justify-between">
+                <div id="header-menu" class="flex items-center justify-between">
                     <h1 class="text-2xl font-bold">Меню</h1>
                     <button onclick="openPopup()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Додати</button>
                 </div>
@@ -135,23 +147,56 @@
                 <div class="space-y-4" id="pizza-list">
                         
                 </div>
-                
-
             </div>
     
           <!-- Orders Tab -->
           <div id="orders" class="tab hidden text-white">
-            <h1 class="text-2xl font-bold">Замовлення</h1>
-            <p class="text-gray-400">(Тут буде список замовлень)</p>
+            <h1 class="text-4xl font-bold mb-4">Замовлення</h1>
+            <table class="w-full text-left table-auto border-collapse">
+                <thead>
+                  <tr class="bg-admHover-color">
+                    <th class="px-4 py-2">ID замовлення</th>
+                    <th class="px-4 py-2">Час замовлення</th>
+                    <th class="px-4 py-2">Час доставки</th>
+                    <th class="px-4 py-2">Ціна</th>
+                    <th class="px-4 py-2">Статус</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-table" class="text-gray-300">
+                  <!-- Записи будут подгружены динамически -->
+                </tbody>
+              </table>
           </div>
     
           <!-- Settings Tab -->
           <div id="settings" class="tab hidden text-white">
-            <h1 class="text-2xl font-bold">Налаштування</h1>
-            <p class="text-gray-400">(Тут будуть налаштування)</p>
-          </div>
-        </main>
+            <h1 class="text-2xl font-bold mb-4">Налаштування</h1>
+
+            <label>Телефон:</label>
+            <input id="contactPhone" type="text" class="bg-gray-700 p-2 rounded w-full mb-3">
+
+            <label>Email:</label>
+            <input id="email" type="email" class="bg-gray-700 p-2 rounded w-full mb-3">
+
+            <label>Години роботи:</label>
+            <input id="openingHours" type="text" class="bg-gray-700 p-2 rounded w-full mb-3">
+
+            <label>Instagram:</label>
+            <input id="instagram" type="text" class="bg-gray-700 p-2 rounded w-full mb-3">
+
+            <label>Telegram:</label>
+            <input id="telegram" type="text" class="bg-gray-700 p-2 rounded w-full mb-3">
+
+            <label>Facebook:</label>
+            <input id="facebook" type="text" class="bg-gray-700 p-2 rounded w-full mb-3">
+
+            <label>Логотип:</label>
+            <input id="logo" type="file" class="text-white mb-4">
+
+            <button onclick="saveSettings()" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Зберегти</button>
         </div>
+        </main>
+    </div>
     
         <script>
             function previewImage(event) {
@@ -166,44 +211,414 @@
                 reader.readAsDataURL(file);
             }
 
-            function showTab(id) {
+            function showMenu(id, event) {
+                // Переключение вкладок
                 document.querySelectorAll('.tab').forEach(tab => tab.classList.add('hidden'));
                 document.getElementById(id).classList.remove('hidden');
 
+                // Обновление стилей кнопок
                 document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('bg-blue-600'));
-                event.target.classList.add('bg-blue-600');
+                if (event) event.target.classList.add('bg-blue-600');
+                const menuContainer = document.querySelector('#menu .space-y-4');
 
                 if (id === 'menu') {
-                    fetch('PHP/get_pizza.php')
-                        .then(response => response.json())
-                        .then(data => {
-                            const menuContainer = document.querySelector('#menu .space-y-4');
-                            // Удалим старый контент (второй div)
-                            const cards = menuContainer.querySelectorAll('.bg-admMenu-color');
-                            cards.forEach(card => card.remove());
+                    document.getElementById('header-menu').classList.remove('hidden');
+                    menuContainer.innerHTML = '';
+                    menu();
+                }else if(id === 'orders'){
+                    document.getElementById('header-menu').classList.add('hidden');
+                    menuContainer.innerHTML = '';
+                    updateOredr();
 
-                            data.forEach(pizza => {
-                                const hiddenClass = pizza.Activ === '0' ? 'text-red-500' : 'text-white';
-                                const visibilityText = pizza.Activ === '0' ? 'Приховано' : `${pizza.Price} ₴`;
-
-                                const card = document.createElement('div');
-                                card.className = "flex items-center bg-admMenu-color rounded shadow p-4";
-                                card.innerHTML = `
-                                    <img src="${pizza.img}" alt="Pizza" class="w-16 h-16 rounded mr-4">
-                                    <div class="flex-1">
-                                        <h3 class="text-lg font-bold">${pizza.NamePizza}</h3>
-                                        <p class="text-sm">${pizza.ingredients}</p>
-                                    </div>
-                                    <div class="text-xl font-bold ${hiddenClass}">${visibilityText}</div>
-                                `;
-                                menuContainer.appendChild(card);
-                            });
-                        })
-                        .catch(error => {
-                            console.log(error)
-                        })
+                }else if (id === 'dashboard'){
+                    document.getElementById('header-menu').classList.add('hidden');
+                    menuContainer.innerHTML = '';
+                    loadDashboardStats();
+                }else if (id === 'settings'){
+                    document.getElementById('header-menu').classList.add('hidden');
+                    loadSettings();
                 }
             }
+
+            function menu(){
+                const menuContainer = document.querySelector('#menu .space-y-4');
+
+                    menuContainer.innerHTML = '';
+
+                    // Получаем пиццу
+                    fetch('PHP/get_pizza.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(pizza => {
+                            const hiddenClass = pizza.Activ === '0' ? 'text-red-500' : 'text-white';
+                            const imgSrc = pizza.img || 'css/img/pizza.png';
+
+                            const card = document.createElement('div');
+                            card.className = "flex items-center bg-admMenu-color rounded shadow p-4";
+                            card.onclick = () => openEditPopup(pizza, 'pizza');
+
+                            const visibilityDiv = document.createElement('div');
+                            visibilityDiv.className = "text-xl font-bold " + hiddenClass;
+
+                            if (pizza.Activ == 0) {
+                                visibilityDiv.innerText = 'Приховано';
+                                visibilityDiv.className = "text-xl font-bold text-red-500";
+                            } else if (pizza.PromotionalPrice && pizza.PromotionalPrice != 0) {
+                                visibilityDiv.innerHTML = `<span style="color: red;">${pizza.PromotionalPrice} ₴</span>`;
+                            } else {
+                                visibilityDiv.innerText = `${pizza.Price} ₴`;
+                            }
+
+                            card.innerHTML = `
+                                <img src="${imgSrc}" alt="Pizza" class="w-16 h-16 rounded mr-4">
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold">${pizza.NamePizza}</h3>
+                                    <p class="text-sm">${pizza.ingredients}</p>
+                                </div>
+                            `;
+
+                            card.appendChild(visibilityDiv);
+                            menuContainer.appendChild(card);
+                        });
+                    })
+
+                    .then(() => {
+                        return fetch('PHP/get_drink.php');
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(drink => {
+                            const hiddenClass = drink.Activ === '0' ? 'text-red-500' : 'text-white';
+                            const visibilityText = drink.Activ === '0' ? 'Приховано' : `${drink.Price} ₴`;
+                            const imgSrc = drink.img || 'css/img/drink.jpg';
+
+                            const card = document.createElement('div');
+                            card.className = "flex items-center bg-admMenu-color rounded shadow p-4";
+                            card.onclick = () => openEditPopup(drink, 'drink');
+                            card.innerHTML = `
+                                <img src="${imgSrc}" alt="Drink" class="w-16 h-16 rounded mr-4">
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold">${drink.NameDish}</h3>
+                                </div>
+                                <div class="text-xl font-bold ${hiddenClass}">${visibilityText}</div>
+                            `;
+                            menuContainer.appendChild(card);
+
+                        });
+                    })
+
+                    .catch(error => console.log('Ошибка:', error));
+
+            }
+
+            function loadDashboardStats() {
+                fetch('PHP/get_orders.php')
+                    .then(response => response.json())
+                    .then(orders => {
+                        const totalOrders = orders.length;
+
+                        let totalProfit = 0;
+                        let todayOrders = 0;
+
+                        const today = new Date();
+                        const todayStr = today.toISOString().split('T')[0];
+                        const startDate = new Date(today);
+                        startDate.setDate(today.getDate() - 6); // 7 дней включая сегодня
+
+                        // Подготовка диапазона дат
+                        const dateRange = [];
+                        for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+                            const formatted = d.toISOString().split('T')[0];
+                            dateRange.push(formatted);
+                        }
+
+                        // Объект с датами и количеством заказов
+                        const orderCountByDate = {};
+                        dateRange.forEach(date => orderCountByDate[date] = 0);
+
+                        orders.forEach(order => {
+                            const rawDate = new Date(order.DateOrder);
+                            const date = rawDate.toISOString().split('T')[0];
+
+                            if (orderCountByDate.hasOwnProperty(date)) {
+                                orderCountByDate[date]++;
+                            }
+
+                            if (date === todayStr) {
+                                todayOrders++;
+                            }
+
+                            order.dishes?.forEach(dish => {
+                                totalProfit += parseFloat(dish.Price);
+                            });
+
+                            order.pizzas?.forEach(pizza => {
+                                totalProfit += parseFloat(pizza.Price);
+                                pizza.ingredients?.forEach(ing => {
+                                    totalProfit += parseFloat(ing.Price * ing.Quantity);
+                                });
+                            });
+                        });
+
+                        document.getElementById('total-orders').textContent = totalOrders.toLocaleString();
+                        document.getElementById('total-profit').textContent = `${totalProfit.toFixed(2)} ₴`;
+                        document.getElementById('orders-today').textContent = todayOrders;
+
+                        // Подготовка данных для графика
+                        const labels = dateRange.map(date => date.slice(5).replace('-', '.')); // MM.DD
+                        const chartData = dateRange.map(date => orderCountByDate[date]);
+
+                        const ctx = document.getElementById('orders-chart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Кількість замовлень',
+                                    data: chartData,
+                                    borderColor: 'rgb(0, 122, 255)',
+                                    backgroundColor: 'rgba(0, 122, 255, 0.2)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointRadius: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { color: '#ccc' },
+                                        grid: { color: '#333' }
+                                    },
+                                    x: {
+                                        ticks: { color: '#ccc' },
+                                        grid: { color: '#333' }
+                                    }
+                                }
+                            }
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Помилка при завантаженні даних:', err);
+                    });
+            }
+
+            document.addEventListener('DOMContentLoaded', loadDashboardStats);
+
+            function updateOredr(){
+                fetch('PHP/get_orders.php')
+                    .then(response => response.json())
+                    .then(orders => {
+                        const table = document.getElementById('orders-table');
+                        table.innerHTML = '';
+
+                        orders.forEach((order, index) => {
+                            let total = 0;
+
+                            // Суммируем блюда
+                            if (order.dishes) {
+                                order.dishes.forEach(dish => {
+                                    total += parseFloat(dish.Price);
+                                });
+                            }
+
+                        // Суммируем пиццы и их ингредиенты
+                        if (order.pizzas) {
+                            order.pizzas.forEach(pizza => {
+                                const defaultPrice = parseFloat(pizza.PromotionalPrice || pizza.Price) || 0;
+
+                                let ingredientsTotal = 0;
+
+                                if (pizza.ingredients && pizza.ingredients.length > 0) {
+                                    pizza.ingredients.forEach(ing => {
+                                        const ingPrice = parseFloat(ing.Price) || 0;
+                                        const ingQuantity = parseFloat(ing.Quantity) || 0;
+                                        ingredientsTotal += ingPrice * ingQuantity;
+                                    });
+                                }
+
+                                let pizzaTotal = defaultPrice + ingredientsTotal;
+
+                                const size = parseInt(pizza.IDSize);
+
+                                if (size === 1) {
+                                    pizzaTotal *= 0.9;
+                                } else if (size === 3) {
+                                    pizzaTotal *= 1.1;
+                                } 
+
+                                total += pizzaTotal;
+                            });
+                        }
+                            
+                        const row = document.createElement('tr');
+                        row.className = `border-t border-gray-700 hover:bg-gray-700 ${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-900'}`;
+                        row.onclick = () => openOrderPopup(order);
+
+                        row.innerHTML = `
+                            <td class="px-4 py-2">#${order.IDOrder}</td>
+                            <td class="px-4 py-2">${order.DateOrder || '-'}</td>
+                            <td class="px-4 py-2">${order.DateDelivery || '-'}</td>
+                            <td class="px-4 py-2">${total.toFixed(2)} ₴</td>
+                            <td class="px-4 py-2">${order.StatusName}</td>
+                        `;
+
+                            table.appendChild(row);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Ошибка загрузки заказов:', error);
+                    });
+            }
+
+            function updateOrderStatus() {
+                const orderId = window.currentOrderId;
+                const newStatus = document.getElementById('order-status')?.value;
+
+                if (!orderId || !newStatus) {
+                    alert('Дані не знайдено');
+                    return;
+                }
+
+                fetch('PHP/update_status.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        orderId,
+                        status: newStatus
+                    })
+                })
+                .then(res => res.json())
+                .then(response => {
+                    if (response.success) {
+                        document.getElementById('order-popup').classList.add('hidden');
+                        updateOredr();
+                    } else {
+                        alert('Помилка при оновленні: ' + (response.error || ''));
+                    }
+                })
+                .catch(err => {
+                    console.error('Помилка запиту:', err);
+                    alert('Помилка зʼєднання');
+                });
+            }
+
+            function openOrderPopup(order) {
+                const popup = document.getElementById('order-popup');
+                const content = document.getElementById('popup-content');
+                content.innerHTML = '';
+
+                const orderInfo = document.createElement('div');
+                orderInfo.className = 'space-y-1 text-sm';
+
+                fetch('PHP/get_statuses.php')
+                    .then(response => response.json())
+                    .then(statuses => {
+                        const options = statuses.map(status => `
+                            <option value="${status.StatusName}" ${status.StatusName === order.StatusName ? 'selected' : ''}>
+                                ${status.StatusName}
+                            </option>`).join('');
+
+                        orderInfo.innerHTML = `
+                            <p><strong>ID замовлення:</strong> #${order.IDOrder}</p>
+                            <p><strong>Статус:</strong> 
+                                <select id="order-status" class="text-white bg-admMain-color p-1 rounded">
+                                    ${options}
+                                </select>
+                            </p>
+                            <p><strong>Дата замовлення:</strong> ${order.DateOrder || '-'}</p>
+                        `;
+
+                        content.appendChild(orderInfo);
+
+                        if (order.dishes?.length) {
+                            const dishList = document.createElement('div');
+                            dishList.innerHTML = `<p class="font-semibold mt-4">Напої:</p>`;
+                            order.dishes.forEach(dish => {
+                                const p = document.createElement('p');
+                                p.textContent = `${dish.NameDish} - ${dish.Price} ₴`;
+                                dishList.appendChild(p);
+                            });
+                            content.appendChild(dishList);
+                        }
+
+                        if (order.pizzas?.length) {
+                            const pizzaList = document.createElement('div');
+                            pizzaList.innerHTML = `<p class="font-semibold mt-4">Піци:</p>`;
+                            order.pizzas.forEach(pizza => {
+                                const btn = document.createElement('button');
+                                btn.className = 'text-blue-400 underline block';
+                                btn.textContent = `${pizza.NamePizza} - ${pizza.Price} ₴`;
+                                btn.onclick = () => openPizzaDetails(pizza);
+                                pizzaList.appendChild(btn);
+                            });
+                            content.appendChild(pizzaList);
+                        }
+
+                        popup.classList.remove('hidden');
+                        window.currentOrderId = order.IDOrder;
+                    })
+                    .catch(error => {
+                        console.error('Не вдалося завантажити статуси:', error);
+                        orderInfo.innerHTML = `
+                            <p><strong>ID замовлення:</strong> #${order.IDOrder}</p>
+                            <p><strong>Статус:</strong> ${order.StatusName}</p>
+                            <p><strong>Дата замовлення:</strong> ${order.DateOrder || '-'}</p>
+                        `;
+                        content.appendChild(orderInfo);
+                        popup.classList.remove('hidden');
+                        window.currentOrderId = order.IDOrder;
+                    });
+            }
+
+            function openPizzaDetails(pizza) {
+                const popup = document.getElementById('popup');
+
+                const typeInput = document.querySelector('input[name="item-type"][value="' + pizza.Type + '"]');
+                if (typeInput) {
+                    typeInput.checked = true;
+                    handleTypeChange();
+                }
+
+                document.getElementById('pizza-name').value = pizza.NamePizza;
+                document.getElementById('pizza-price').value = pizza.Price;
+
+                const img = document.getElementById('image-preview');
+                img.src = pizza.Image || 'https://via.placeholder.com/150?text=Фото';
+
+                const ingredientsContainer = document.getElementById('ingredients-container');
+                ingredientsContainer.innerHTML = '';
+                if (pizza.ingredients?.length) {
+                    pizza.ingredients.forEach(ing => {
+                        const p = document.createElement('p');
+                        p.textContent = `${ing.NameIngredient} (${ing.Price} ₴ × ${ing.Quantity})`;
+                        ingredientsContainer.appendChild(p);
+                    });
+                }
+
+                document.getElementById('close-popup').addEventListener('click', () => {
+                    document.getElementById('popup').classList.add('hidden');
+                });
+
+                document.querySelectorAll('#popup input, #popup select').forEach(el => {
+                    el.setAttribute('readonly', true);
+                    el.setAttribute('disabled', true);
+                });
+
+                document.querySelectorAll('#popup button[type="submit"], #popup button[type="button"]').forEach(btn => {
+                    btn.style.display = 'none';
+                });
+
+                popup.classList.remove('hidden');
+            }
+
+            document.getElementById('close-order-popup').addEventListener('click', () => {
+                document.getElementById('order-popup').classList.add('hidden');
+            });
 
             function addIngredient() {
                 const select = document.getElementById('ingredient-select');
@@ -270,10 +685,70 @@
                 document.getElementById('popup').classList.add('hidden');
             }
 
+            function openEditPopup(data, type) {
+                document.getElementById('popup').classList.remove('hidden');
+
+                // Устанавливаем тип
+                document.querySelectorAll('input[name="item-type"]').forEach(input => {
+                    input.checked = input.value === type;
+                });
+
+                handleTypeChange(); // обновляет отображение секций по типу
+
+                // Устанавливаем изображение
+                const img = document.getElementById('image-preview');
+                img.src = data.img || 'https://via.placeholder.com/150x150?text=Фото';
+
+                // Название и цена
+                document.getElementById('pizza-name').value = data.NamePizza || data.NameDish || '';
+                document.getElementById('pizza-price').value = data.Price || '';
+                document.getElementById('promo-price').value = data.PromotionalPrice || '';
+
+                // Очистить и заново заполнить список ингредиентов
+                const container = document.getElementById('ingredients-container');
+                container.innerHTML = '';
+                if (type === 'pizza' && data.ingredients) {
+                    data.ingredients.split(',').forEach(name => {
+                        const item = document.createElement('div');
+                        item.className = 'ingredient-item flex items-center justify-between bg-gray-700 p-2 rounded';
+                        item.dataset.name = name.trim();
+
+                        item.innerHTML = `
+                            <span>${name.trim()}</span>
+                            <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">✕</button>
+                            <input type="hidden" name="ingredients[]" value="${name.trim()}">
+                        `;
+                        container.appendChild(item);
+                    });
+                }
+
+                // Установим состояние активности
+                const toggleBtn = document.getElementById('toggle-visibility');
+                const isHidden = String(data.Activ) === '0' || String(data.status) === '0';
+                
+                toggleBtn.textContent = isHidden ? 'Приховано' : 'Приховати';
+                toggleBtn.classList.toggle('bg-red-600', isHidden);
+                toggleBtn.classList.toggle('bg-admHover-color', !isHidden);
+
+                loadIngredients();
+            }
+
+            document.getElementById('toggle-visibility').onclick = function () {
+                const isHidden = this.dataset.hidden === 'true';
+                this.dataset.hidden = !isHidden;
+                this.textContent = !isHidden ? 'Приховано' : 'Приховати';
+
+                this.classList.remove('bg-red-600', 'bg-admHover-color');
+                if (!isHidden) {
+                    this.classList.add('bg-red-600');
+                } else {
+                    this.classList.add('bg-admHover-color');
+                }
+            };
+
             document.querySelector('form').addEventListener('submit', function (e) {
                 e.preventDefault();
                 const type = document.querySelector('input[name="item-type"]:checked').value;
-
                 if(type === 'pizza'){ //пицца
 
                     const name = document.getElementById('pizza-name').value.trim();
@@ -281,6 +756,10 @@
                     const ingredients = Array.from(document.querySelectorAll('#ingredients-container .ingredient-item'))
                         .map(item => item.dataset.name);
                     const imageFile = document.getElementById('image-input').files[0];
+                    const promotional = document.getElementById('promo-price').value.trim();
+                    const isHidden = document.getElementById('toggle-visibility').dataset.hidden === 'true';
+                    const status = isHidden ? 0 : 1;
+
 
                     const formData = new FormData();
                     formData.append('name', name);
@@ -289,6 +768,8 @@
                     if (imageFile) {
                         formData.append('image', imageFile);
                     }
+                    formData.append('promotional', promotional);
+                    formData.append('status', status);
 
                     fetch('PHP/save_pizza.php', {
                         method: 'POST',
@@ -298,6 +779,7 @@
                         .then(result => {
                             console.log('Успішно:', result);
                             closePopup();
+                            menu();
                         })
                         .catch(error => {
                             console.error('Помилка:', error);
@@ -321,6 +803,7 @@
                     .then(result => {
                         console.log('Успішно:', result);
                         closePopup();
+                        menu();
                     })
                     .catch(error => {
                         console.error('Помилка:', error);
@@ -374,6 +857,40 @@
                 }
             }
 
-        </script>
+            function loadSettings() {
+                fetch('PHP/load_settings.php')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('contactPhone').value = data.contactPhone || '';
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('openingHours').value = data.openingHours || '';
+                    document.getElementById('instagram').value = data.instagram || '';
+                    document.getElementById('telegram').value = data.telegram || '';
+                    document.getElementById('facebook').value = data.facebook || '';
+                    // logo не отображаем — это отдельная логика
+                });
+            }
+
+            function saveSettings() {
+                const formData = new FormData();
+                formData.append('contactPhone', document.getElementById('contactPhone').value);
+                formData.append('email', document.getElementById('email').value);
+                formData.append('openingHours', document.getElementById('openingHours').value);
+                formData.append('instagram', document.getElementById('instagram').value);
+                formData.append('telegram', document.getElementById('telegram').value);
+                formData.append('facebook', document.getElementById('facebook').value);
+                const logoFile = document.getElementById('logo').files[0];
+                if (logoFile) formData.append('logo', logoFile);
+
+                fetch('PHP/save_settings.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => alert('Налаштування збережено'));
+            }
+
+            
+        </script>      
     </body>
 </html>

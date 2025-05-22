@@ -1,27 +1,22 @@
 <?php
     header('Content-Type: application/json');
 
-    $host = 'localhost';
-    $db   = 'pizzatime';
-    $user = 'root';
-    $pass = '';
-    $charset = 'utf8mb4';
-
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-    $options = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ];
-
-    try {
-        $pdo = new PDO($dsn, $user, $pass, $options);
+    require 'db_connect.php';
 
         // Получаем данные из POST
         $name = $_POST['name'] ?? '';
         $price = $_POST['price'] ?? 0;
         $ingredients = isset($_POST['ingredients']) ? json_decode($_POST['ingredients'], true) : [];
+        $promo = $_POST['promotional'] ?? null;
+        $status = $_POST['status'];
 
-        // Более точная проверка
+        if($promo == 0 || $promo == 0.00){
+            $promo = null;
+        }
+
+        if($promo == null){
+            $promo = null;
+        }
         if (trim($name) === '' || !is_numeric($price) || !is_array($ingredients) || count($ingredients) === 0) {
             echo json_encode(['status' => 'error', 'message' => 'Некоректні дані']);
             exit;
@@ -43,11 +38,11 @@
 
             // Якщо надіслано нове зображення, оновлюємо його
             if ($imgData) {
-                $stmt = $pdo->prepare("UPDATE pizza SET Price = ?, img = ?, Activ = 1 WHERE IDPizza = ?");
-                $stmt->execute([$price, $imgData, $pizzaId]);
+                $stmt = $pdo->prepare("UPDATE pizza SET Price = ?, img = ?, Activ = ?, PromotionalPrice = ? WHERE IDPizza = ?");
+                $stmt->execute([$price, $imgData, $status, $promo, $pizzaId]);
             } else {
-                $stmt = $pdo->prepare("UPDATE pizza SET Price = ?, Activ = 1 WHERE IDPizza = ?");
-                $stmt->execute([$price, $pizzaId]);
+                $stmt = $pdo->prepare("UPDATE pizza SET Price = ?, Activ = ?, PromotionalPrice = ? WHERE IDPizza = ?");
+                $stmt->execute([$price, $status, $promo, $pizzaId]);
             }
 
             // Видаляємо старі інгредієнти з таблиці composition
@@ -56,8 +51,8 @@
 
         } else {
             // Якщо піци немає, додаємо нову
-            $stmt = $pdo->prepare("INSERT INTO pizza (NamePizza, Price, img, Activ) VALUES (?, ?, ?, 1)");
-            $stmt->execute([$name, $price, $imgData]);
+            $stmt = $pdo->prepare("INSERT INTO pizza (NamePizza, Price, img, Activ, PromotionalPrice) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$name, $price, $imgData, $status, $promo]);
 
             // Отримуємо ID нової піци
             $pizzaId = $pdo->lastInsertId();
@@ -77,7 +72,4 @@
         }
 
         echo json_encode(['status' => 'success', 'message' => 'Піцу збережено']);
-    } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => 'Помилка: ' . $e->getMessage()]);
-    }
 ?>

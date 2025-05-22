@@ -10,3 +10,17 @@
     --color-main2-color: #EBC171 ;
     --color-basket-color: #D5C3AC ;
 }
+
+@media (min-width: 2560px) {
+    #pizza-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    #drink-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    #promotional-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+}

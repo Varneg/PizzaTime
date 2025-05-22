@@ -6,7 +6,6 @@
     <title>Document</title>
     <link href="./css/output.css" rel="stylesheet">
     <script src="https://secure.wayforpay.com/server/pay-widget.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 </head>
 <body class="bg-main-color">
@@ -24,27 +23,29 @@
         <div class="text-4xl font-bold font-[Merriweather]">PIZZATIME</div>
 
         <nav class="flex space-x-8 font-semibold text-2xl">
-          <a href="#" class="px-4">Меню</a>
-          <a href="#" class="px-4">Про нас</a>
-          <a href="#" class="px-4">Акції</a>
+          <a href="#meny-grid" class="px-4">Меню</a>
+          <a href="#about-us" class="px-4">Про нас</a>
+          <a href="#promotional-grid" class="px-4">Акції</a>
           <a href="#" class="px-4">Контакти</a>
         </nav>
         
-        <div class="w-16 h-16  rounded-full flex items-center justify-center">            
-            
+        <div class="w-16 h-16 mt-6 rounded-full flex items-center justify-center">            
+            <img src="./css/img/logo.png">
         </div>
 
     </header>
     
-    <section class="w-full h-[400px] bg-cover bg-center" style="background-image: url('./css/img/bg.png');">
+    <section id="img" class="w-full h-[400px] bg-cover bg-center" style="background-image: url('./css/img/bg.png');">
 
     </section>
 
         <main class="mx-auto py-10 bg-main-color size-full flex gap-10 relative">
     
             <!-- Логотип -->
-            <div class="w-1/4 flex flex-col items-center">
-            <!-- Лого -->
+            <div class="w-1/4 flex flex-col items-center ml-2">
+                <div class="sticky top-1/2 -translate-y-1/2 p-4 ml-8 my-40">
+                    <img src="./css/img/logo.png">
+                </div>
             </div>
         
             <!-- Сетка пицц -->
@@ -52,8 +53,14 @@
                 <div id="pizza-grid" class="grid grid-cols-4 gap-6 flex-1 mb-6">
 
                 </div>
+
                 <h2 class="text-dark text-4xl font-bold text-center font-[Merriweather]"> Напої </h2>
                 <div id="drink-grid" class="grid grid-cols-4 gap-6 flex-1">
+
+                </div>
+                
+                <h2 class="text-dark text-4xl font-bold text-center font-[Merriweather]"> Акції </h2>
+                <div id="promotional-grid" class="grid grid-cols-4 gap-6 flex-1">
 
                 </div>
             </div>
@@ -69,13 +76,13 @@
                     </div>
                     <div class="flex gap-2">
                         <button id="clear-basket" class="bg-[#A4763A] px-3 py-1 rounded">Очистити</button>
-                        <button id="pay-button" onclick="pay()" class="bg-red-600 text-white px-3 py-1 rounded">Оплата</button>
+                        <button id="pay-button" class="bg-red-600 text-white px-3 py-1 rounded">Оплата</button>
                     </div>
                 </div>
             </div>
         </main>
 
-        <div class="bg-header-color mx-6 mb-6 rounded-3xl p-6 text-main-color relative overflow-hidden" style="font-size: 24px;">
+        <div id="about-us" class="bg-header-color mx-6 mb-6 rounded-3xl p-6 text-main-color relative overflow-hidden" style="font-size: 24px;">
             <div class="grid grid-cols-4 gap-2  relative">
 
                 <div class="relative ">
@@ -121,62 +128,83 @@
                     <h4 class="font-black text-4xl py-2">Доставка</h4>
                     <p class="py-1 text-xl"> Контакти </p>
                     <p class="py-1 text-xl">  Меню </p>
-                    <p class="py-1 text-xl"> Години роботи: <br>08:00 - 23:00 </p>
+                    <p class="py-1 text-xl" id="footer-hours">Години роботи: <br>08:00 - 23:00</p>
                 </div>
                 <div>
                     <h4 class="font-black text-4xl py-2">Контакти</h4>
                     <p class="py-1 text-xl">м. Дніпро, вул. Шевченка 1</p>
-                    <p class="py-1 text-xl">+38 (067) 123-45-67</p>
-                    <p class="py-3 text-xl">info@pizzatime.ua</p>
+                    <p class="py-1 text-xl" id="footer-phone">+38 (067) 123-45-67</p>
+                    <p class="py-3 text-xl" id="footer-email">info@pizzatime.ua</p>
                 </div>
                 <div>
                     <h4 class="font-black text-4xl py-2">Ми в соцмережах</h4>
                     <div class="flex space-x-2 mt-2">
-                        <img src="./css/img/facebook.png" alt="fb" class="w-18 h-18 mx-3">
-                        <img src="./css/img/instagram.png" alt="inst" class="w-18 h-18 mx-3">
-                        <img src="./css/img/telegram.png" alt="tt" class="w-18 h-18 mx-3">
+                        <a id="footer-facebook" href="#" target="_blank"><img src="./css/img/facebook.png" class="w-18 h-18 mx-3"></a>
+                        <a id="footer-instagram" href="#" target="_blank"><img src="./css/img/instagram.png" class="w-18 h-18 mx-3"></a>
+                        <a id="footer-telegram" href="#" target="_blank"><img src="./css/img/telegram.png" class="w-18 h-18 mx-3"></a>
                     </div>
-
                     <p class="py-1 text-xl mt-2">Політика конфіденційності</p>
                     <p class="py-1 text-xl">Угода користувача</p>
                 </div>
                 <div class="relative w-1/8">
-                    <button class="absolute top-0 right-0 bg-main-color text-header-color px-16 py-4 font-black text-4xl rounded-4xl">Вгору</button>
+                    <a class="absolute top-0 right-0 bg-main-color text-header-color px-16 py-4 font-black text-4xl rounded-4xl" href="#img">Вгору</a>
                     <p class="absolute bottom-0 right-0 m-2 text-xl">© 2025 PIZZATIME. Всі права захищені</p>
                 </div>
             </div>
         </footer>
 
         <script>
-                        function showMenu(){
+            function showMenu(){
                 fetch('PHP/get_pizza.php')
                 .then(response => response.json())
                 .then(data => {
                     const pizzaGrid = document.getElementById('pizza-grid');
-                    pizzaGrid.innerHTML = ''; // Очистка
+                    const promoGrid = document.getElementById('promotional-grid');
+
+                    pizzaGrid.innerHTML = '';
+                    promoGrid.innerHTML = '';
 
                     data.forEach(pizza => {
-                        const pizzaCard = document.createElement('div');
-                        pizzaCard.className = 'bg-main-color rounded-xl p-4 w-[220px] h-auto flex flex-col items-center text-center hover:shadow-lg hover:bg-main2-color';
-                        // Заглушка
-                        const placeholder = './css/img/pizza.png';
+                        if(pizza.Activ != 0){
+                            const pizzaCard = document.createElement('div');
+                            pizzaCard.className = 'bg-main-color rounded-xl p-4 w-[220px] h-auto flex flex-col items-center text-center hover:shadow-lg hover:bg-main2-color';
 
-                        pizzaCard.innerHTML = `
-                            <h3 class="text-xl font-bold mb-2 font-[Merriweather]">${pizza.NamePizza}</h3>
-                            <img src="${pizza.image || placeholder}" alt="${pizza.NamePizza}" class="w-38 h-38 object-cover mb-4">
-                            <p class="text-lg font-semibold mb-4 font-[Merriweather]">${pizza.Price} ₴</p>
-                            <button class="bg-buton-color text-white px-4 py-2 rounded hover:bg-red-700">Додати до кошику</button>
-                        `;
+                            const placeholder = './css/img/pizza.png';
 
-                        pizzaCard.onclick = () => {
-                            document.getElementById('composition').classList.remove('hidden');
-                            loadPizza(pizza.IDPizza); 
+                            const priceHTML = (
+                                pizza.PromotionalPrice !== null && pizza.PromotionalPrice !== ''
+                                    ? `<span class="mr-2 line-through">${pizza.Price} ₴</span>
+                                    <span class="text-red-500">${pizza.PromotionalPrice} ₴</span>`
+                                    : `${pizza.Price} ₴`
+                            );
+
+                            pizzaCard.innerHTML = `
+                                <h3 class="text-xl font-bold mb-2 font-[Merriweather]">${pizza.NamePizza}</h3>
+                                <img src="${pizza.image || placeholder}" alt="${pizza.NamePizza}" class="w-38 h-38 object-cover mb-4">
+                                <p class="text-lg font-semibold mb-4 font-[Merriweather]">${priceHTML}</p>
+                                <button class="bg-buton-color text-white px-4 py-2 rounded hover:bg-red-700">Додати до кошику</button>
+                            `;
+
+                            pizzaCard.onclick = () => {
+                                document.getElementById('composition').classList.remove('hidden');
+                                loadPizza(pizza.IDPizza);
+                            };
+
+                            // Вставляем карточку в нужный блок
+                            pizzaGrid.appendChild(pizzaCard);
+
+                            if (pizza.PromotionalPrice !== null && pizza.PromotionalPrice !== '') {
+                                // Клонируем карточку и добавляем в блок акций
+                                const promoCard = pizzaCard.cloneNode(true);
+                                promoCard.onclick = () => {
+                                    document.getElementById('composition').classList.remove('hidden');
+                                    loadPizza(pizza.IDPizza);
+                                };
+                                promoGrid.appendChild(promoCard);
+                            }
                         }
-
-                        pizzaGrid.appendChild(pizzaCard);
                     });
-                })
-                .catch(error => console.error('Помилка завантаження меню:', error));
+                });
 
                 fetch('PHP/get_drink.php')
                 .then(response => response.json())
@@ -184,25 +212,43 @@
                     const pizzaGrid = document.getElementById('drink-grid');
 
                     data.forEach(drink => {
-                        const pizzaCard = document.createElement('div');
-                        pizzaCard.className = 'bg-main-color rounded-xl p-4 w-[220px] h-auto flex flex-col items-center text-center hover:shadow-lg hover:bg-main2-color';
+                        const DrinkCard = document.createElement('div');
+                        DrinkCard.className = 'bg-main-color rounded-xl p-4 w-[220px] h-auto flex flex-col items-center text-center hover:shadow-lg hover:bg-main2-color';
                         // Заглушка
-                        const placeholder = './css/img/pizza.png';
+                        const placeholder = './css/img/drink.jpg';
 
-                        pizzaCard.innerHTML = `
+                        DrinkCard.innerHTML = `
                             <h3 class="text-xl font-bold mb-2 font-[Merriweather]">${drink.NameDish}</h3>
                             <img src="${drink.image || placeholder}" alt="${drink.NameDish}" class="w-38 h-38 object-cover mb-4">
                             <p class="text-lg font-semibold mb-4 font-[Merriweather]">${drink.Price} ₴</p>
                             <button class="bg-buton-color text-white px-4 py-2 rounded hover:bg-red-700">Додати до кошику</button>
                         `;
 
-                        pizzaGrid.appendChild(pizzaCard);
+                        DrinkCard.onclick = () => {
+                            addDrink(drink);
+                        }
+
+                        pizzaGrid.appendChild(DrinkCard);
                     });
                 })
             }
 
             document.addEventListener('DOMContentLoaded', showMenu);
 
+            function addDrink(drink) {
+                const ThisDrink = {
+                    id: drink.IDDish,         
+                    name: drink.NameDish,
+                    price: drink.Price,
+                    type: 'drink'           
+                };
+
+                const basket = JSON.parse(localStorage.getItem('basket')) || [];
+                basket.push(ThisDrink);
+                localStorage.setItem('basket', JSON.stringify(basket));
+
+                renderBasket();
+            }
 
             function loadPizza(pizzaId) {
                 document.getElementById('header').style.position = "static";
@@ -210,13 +256,22 @@
                 fetch(`PHP/get_pizza_composition.php?id=${pizzaId}`)
                     .then(response => response.json())
                     .then(data => {
+                        console.log("Данные о пицце:", data);  // Отладочный вывод
+
+                        window.selectedPizza = data.pizza; 
+
                         const popup = document.getElementById('composition');
                         const imgSrc = data.pizza.img || './css/img/pizza.png';
 
                         const selected = data.ingredients.filter(ing => ing.Quantity > 0);
                         const available = data.ingredients.filter(ing => ing.Quantity === 0);
 
-                        updateFinalPrice.base = parseFloat(data.pizza.Price);
+                        // Проверка и обновление базовой цены (с промо-ценой, если она есть)
+                        const basePrice = data.pizza.PromotionalPrice 
+                            ? parseFloat(data.pizza.PromotionalPrice) 
+                            : parseFloat(data.pizza.Price);
+                        
+                        updateFinalPrice.base = basePrice;
                         updateFinalPrice.ingredients = selected;
 
                         popup.innerHTML = `
@@ -229,14 +284,20 @@
                                     <img src="${imgSrc}" alt="${data.pizza.NamePizza}" class="w-60 h-60 object-cover rounded-xl shadow">
                                 </div>
 
-                                <div class="mb-4 text-center text-xl">Базова ціна: <strong>${data.pizza.Price} ₴</strong></div>
+                                <div class="mb-4 text-center text-xl">
+                                    Базова ціна: 
+                                    ${data.pizza.PromotionalPrice
+                                        ? `<span class="line-through text-gray-500 mr-2">${data.pizza.Price} ₴</span>
+                                        <strong class="text-red-600">${data.pizza.PromotionalPrice} ₴</strong>`
+                                        : `<strong>${data.pizza.Price} ₴</strong>`}
+                                </div>
 
                                 <div class="mb-4 text-center">
                                     <label class="mr-4 text-lg">Розмір:</label>
                                     <select id="pizzaSize" class="px-2 py-1 rounded border">
-                                        <option value="null">Середня</option>
-                                        <option value="0">Мала (-10%)</option>
-                                        <option value="1">Велика (+10%)</option>
+                                        <option value="2">Середня</option>
+                                        <option value="1">Мала (-10%)</option>
+                                        <option value="3">Велика (+10%)</option>
                                     </select>
                                 </div>
 
@@ -258,21 +319,26 @@
 
                                 <div class="flex justify-center gap-4">
                                     <button onclick="resetPizzaSettings()" class="bg-gray-300 text-black px-6 py-2 rounded hover:bg-gray-400">Скинути налаштування</button>
-                                    <button onclick="addToBasket()" class="bg-buton-color text-white px-6 py-2 rounded hover:bg-red-700">Додати до кошика</button>
+                                    <button id="addToBasketBtn" class="bg-buton-color text-white px-6 py-2 rounded hover:bg-red-700">Додати до кошика</button>
                                 </div>
                             </div>
                         `;
 
+                        document.getElementById('addToBasketBtn').addEventListener('click', addToBasket);
+
                         document.getElementById('pizzaSize').addEventListener('change', () => {
+                            updateFinalPrice();
+                        });
+
+                        // Сохраняем доступные ингредиенты глобально
+                        window.lastAvailable = available;
+
                         updateFinalPrice();
-                    });
-
-                    // Сохраняем доступные ингредиенты глобально
-                    window.lastAvailable = available;
-
-                    updateFinalPrice();
-                });
+                    })
+                    .catch(err => console.error("Ошибка загрузки данных:", err));
             }
+
+
 
             function renderIngredientBlock(ing) {
                 return `
@@ -343,8 +409,13 @@
                     }
                 });
 
-                if (size === "0") total *= 0.9;
-                else if (size === "1") total *= 1.1;
+                console.log("Итоговая цена до применения скидки/наценки:", total);  // Логирование
+
+                // Применяем скидку или наценку в зависимости от размера
+                if (size === "1") total *= 0.9; // Малая пицца -10%
+                else if (size === "3") total *= 1.1; // Большая пицца +10%
+
+                console.log("Итоговая цена после скидки/наценки:", total);  // Логирование
 
                 document.getElementById('finalPrice').innerText = total.toFixed(2) + ' ₴';
             }
@@ -381,11 +452,10 @@
             }
 
             function addToBasket() {
-                const pizzaId = new URLSearchParams(window.location.search).get("id") || window.lastPizzaId;
+                const pizza = window.selectedPizza;
                 const size = document.getElementById('pizzaSize').value;
-                const name = document.querySelector('#composition h2').innerText.replace('Налаштувати піцу: ', '');
-                const price = parseFloat(document.getElementById('finalPrice').innerText);
-                
+                const price = parseFloat(document.getElementById('finalPrice').innerText.replace(/[^\d.]/g, ''));
+
                 const ingredients = updateFinalPrice.ingredients.map(ing => {
                     const qty = parseInt(document.getElementById(`qty-${ing.IDIngredient}`).innerText);
                     return {
@@ -396,16 +466,18 @@
                     };
                 });
 
-                const pizza = {
-                    id: Date.now(),
-                    name: name,
+                const ThisPizza = {
+                    id: pizza.IDPizza,
+                    name: pizza.NamePizza,
                     size: size,
                     price: price,
-                    ingredients: ingredients
+                    ingredients: ingredients,
+                    type: 'pizza',
+                    promoPrice: pizza.PromotionalPrice ? parseFloat(pizza.PromotionalPrice) : null // Сохраняем промо-цену, если она есть
                 };
-            
+
                 const basket = JSON.parse(localStorage.getItem('basket')) || [];
-                basket.push(pizza);
+                basket.push(ThisPizza);
                 localStorage.setItem('basket', JSON.stringify(basket));
 
                 renderBasket();
@@ -420,23 +492,46 @@
                 let total = 0;
 
                 basket.forEach(item => {
+                    // Универсальные названия
+                    const name = item.name || item.NamePizza || item.NameDish || 'Невідомо';
+                    const price = parseFloat(item.price || item.Price || 0);
+                    const sizeLabel = item.size ? renderSizeLabel(item.size) : '';
+
                     const li = document.createElement('li');
                     li.className = 'mb-2 text-sm';
                     li.innerHTML = `
-                        <div class="font-bold">${item.name} ${renderSizeLabel(item.size)}</div>
-                        <div class="text-gray-700">Ціна: ${item.price.toFixed(2)} ₴</div>
+                        <div class="font-bold">${name} ${sizeLabel}</div>
+                        <div class="text-gray-700">Ціна: ${price.toFixed(2)} ₴</div>
                     `;
                     list.appendChild(li);
-                    total += item.price;
+                    total += price;
                 });
 
                 sumBlock.innerText = `Сума: ${total.toFixed(2)} ₴`;
             }
 
             function renderSizeLabel(size) {
-                if (size === "0") return "(Мала)";
-                if (size === "1") return "(Велика)";
-                return "(Середня)";
+                if (size === "1") return "(Мала)";
+                if (size === "3") return "(Велика)";
+                else if(size === "2") return "(Середня)";
+            }
+
+            function pay(){
+                const basket = JSON.parse(localStorage.getItem('basket')) || [];
+
+                console.log("Basket contents:", basket);
+
+                fetch('PHP/submit_order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ basket: basket })
+                })
+                .then(response => response.json())
+                .then(data => console.log("Response:", data))
+                .then(localStorage.removeItem('basket'), renderBasket())
+                .catch(error => console.error("Error:", error));
             }
 
             window.addEventListener('DOMContentLoaded', () => {
@@ -446,27 +541,6 @@
             document.querySelector('#clear-basket').addEventListener('click', () => {
                 localStorage.removeItem('basket');
                 renderBasket();
-            });
-
-            window.addEventListener('DOMContentLoaded', () => {
-                const basket = JSON.parse(localStorage.getItem('basket')) || [];
-                const list = document.querySelector('.sticky ul');
-                const sumBlock = document.querySelector('.sticky .font-semibold');
-                let total = 0;
-
-                basket.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = 'mb-2';
-                    li.innerHTML = `
-                        <div class="font-bold">${item.name}</div>
-                        <div class="text-sm">Ціна: ${item.price}</div>
-                    `;
-                    list.appendChild(li);
-
-                    total += parseFloat(item.price);
-                });
-
-                sumBlock.innerText = `Сума: ${total.toFixed(2)} ₴`;
             });
 
             function closePopup() {
@@ -484,6 +558,8 @@
             }
 
             document.getElementById('pay-button').addEventListener('click', function () {
+                pay();
+
                 const form = document.createElement('form');
                 form.method = 'post';
                 form.action = 'https://secure.wayforpay.com/pay';
@@ -494,15 +570,15 @@
                     <input name="merchantAccount" value="test_merch_n1">
                     <input name="merchantAuthType" value="SimpleSignature">
                     <input name="merchantDomainName" value="www.market.ua">
-                    <input name="orderReference" value="DH1745217726">
+                    <input name="orderReference" value="DH1747322870">
                     <input name="orderDate" value="1415379863">
                     <input name="amount" value="1547.36">
                     <input name="currency" value="UAH">
                     <input name="orderTimeout" value="49000">
-                    <input name="productName[]" value="Процесор Intel Core i5-4670 3.4GHz">
-                    <input name="productName[]" value="Kingston DDR3-1600 4096MB PC3-12800">
-                    <input name="productPrice[]" value="1000">
-                    <input name="productPrice[]" value="547.36">
+                    <input name="productName[]" value="Авторська (Середня)">
+                    <input name="productName[]" value="Pepsi 0.5">
+                    <input name="productPrice[]" value="154">
+                    <input name="productPrice[]" value="64">
                     <input name="productCount[]" value="1">
                     <input name="productCount[]" value="1">
                     <input name="clientFirstName" value="Василь">
@@ -511,7 +587,7 @@
                     <input name="clientCity" value="Дніпро">
                     <input name="clientEmail" value="some@mail.com">
                     <input name="defaultPaymentSystem" value="card">
-                    <input name="merchantSignature" value="2d1c0fb24db14751dafff980c9c5258f">
+                    <input name="merchantSignature" value="a575046a5ed1d83cf1769a2aaf8c5f74">
                     <input type="submit" value="Test">
                 `;
                 
@@ -519,10 +595,25 @@
                 form.submit();
             });
 
-            function pay(){
+            function loadFooter() {
+                fetch('PHP/load_settings.php')
+                .then(res => res.json())
+                .then(data => {
+                    // Контакти
+                    document.getElementById('footer-phone').textContent = data.contactPhone;
+                    document.getElementById('footer-email').textContent = data.email;
 
+                    // Години роботи
+                    document.getElementById('footer-hours').innerHTML = `Години роботи: <br>${data.openingHours}`;
+
+                    // Соцмережі — оновлення посилань (передбачити теги <a>)
+                    document.getElementById('footer-facebook').href = data.facebook;
+                    document.getElementById('footer-instagram').href = data.instagram;
+                    document.getElementById('footer-telegram').href = data.telegram;
+                });
             }
-        </script>
 
+            document.addEventListener("DOMContentLoaded", loadFooter);
+        </script>
     </body>
 </html>
